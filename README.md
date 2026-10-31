@@ -1,0 +1,15 @@
+# Warehouse Re-Slotting from Predicted Demand (P8)
+
+An end-to-end AI logistics pipeline that optimizes warehouse product placement by combining deep learning demand forecasting with Constraint Satisfaction Problem (CSP) algorithms and heuristic search.
+
+## Architecture & Modules
+1. **Data Pipeline (`src/make_data.py`, `src/data.py`)**: Processes the UCI Online Retail II dataset, engineering an 8-week sliding window feature set and extracting the top 30 co-bought product pairs.
+2. **Demand Forecasting (`src/nn.py`, `src/eval.py`)**: A PyTorch Neural Network trained to predict weekly product demand, outperforming 4-week-average baselines in Test MSE.
+3. **Constraint Satisfaction (`src/csp.py`)**: A highly optimized Backtracking solver with Forward Checking and Minimum Remaining Values (MRV). It enforces physical warehouse constraints (heavy items, incompatible categories, co-bought distances) and features an auto-relaxation loop to prevent search traps.
+4. **Layout Optimization (`src/search.py`)**: Explores the swap-space of the CSP-generated layout. Implements bounded Uniform Cost Search (UCS), Greedy Best-First, and A* algorithms to minimize the demand-weighted walking distance for order pickers.
+5. **Integrated Simulation (`src/integration.py`)**: Simulates 10 weeks of held-out real order data to evaluate the true walking distance across Random, Last-Week Demand, and NN-Optimized layouts.
+
+## Usage
+Execute the full pipeline demonstration:
+```bash
+python run_demo.py
